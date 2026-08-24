@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sliding Control in Orbital Stabilization</title>
+
+  <link rel="stylesheet" href="reveal/dist/reset.css">
+  <link rel="stylesheet" href="reveal/dist/reveal.css">
+  <link rel="stylesheet" href="reveal/dist/theme/white.css" id="theme">
+  <link rel="stylesheet" href="reveal/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="reveal/plugin/math/katex.js">
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="robotanim.css">
+</head>
+
+<body>
+  <div id="slide-title" class="slide-title">
+    <iframe
+      src="sirius-logo.html?scale=1.1&basecolor=%234040F0&hicolor=%238080FF"
+      width="60pt"
+      height="50pt"
+      frameborder="0"
+      scrolling="no">
+    </iframe>
+    <div class="subtitle" id="slide-subtitle">##</div>
+  </div>
+
+  <div style="position: fixed; right: 10pt; top: 5pt;">
+    <img style="width: 200px;" src="media/IFAC_Logo.gif" alt="IFAC-logo">
+  </div>
+
+  <div class="slide-info">
+     <div style="display: flex; gap: 0.75rem; align-items: center">
+      <div class="robot">
+        <div class="antenna left"></div>
+        <div class="antenna right"></div>
+        <div class="leg left"></div>
+        <div class="leg right"></div>
+        <div class="arm left"></div>
+        <div class="head"></div>
+        <div class="nose"></div>
+        <div class="eye"></div>
+        <div class="body"></div>
+        <div class="arm right"></div>
+      </div>
+      <div>
+        <div class="title-foot">Orbital Stabilization of Periodic Orbits</div>
+        <div class="author-foot">
+          Maksim Surov
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <section data-title="">
+        <h1 style="font-size: 36pt">
+          Sliding Mode Control and Subspace Stabilization Methodology 
+          for the Orbital Stabilization of
+          Periodic Trajectories
+        </h1>
+
+        <br>
+
+        <div class="cols">
+          <div style="flex: 0.8">
+            <div class="author" style="margin-top: 12pt; margin-bottom: 12pt; margin-left: 50pt; text-align: left;">
+              Maksim Surov<br>
+              <a style="font-size: 24pt; color: #404080; font-weight: bold;">&#9993 surov.mo@talantiuspeh.ru</a>
+            </div>
+
+            <div class="author" style="margin-top: 12pt; margin-bottom: 12pt; margin-left: 50pt; text-align: left;">
+              Leonid Freidovich<br>
+              <a style="font-size: 24pt; color: #404080; font-weight: bold;">&#9993 leonid.freidovich@umu.se</a>
+            </div>
+
+            <div style="display: flex; gap: 0pt; align-items: margin-left; margin-left: 55pt; margin-top: 50pt;">
+              <div style="height: 140pt">
+                <iframe
+                  src="sirius-logo.html?scale=3.0&period=8&basecolor=%23202020&hicolor=%23C0C0C0"
+                  width="160pt"
+                  height="100%"
+                  frameborder="0"
+                  scrolling="no">
+                </iframe>
+              </div>
+              <div>
+                <div class="organization-title">
+                  Sirius University
+                </div>
+                <div class="organization-subtitle">
+                  of Science and Technology <br>
+                  Sochi, Russia
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0pt; align-items: margin-left; margin-left: 50pt; margin-top: -40pt;">
+              <div style="height: 100pt">
+                <img class="img" src="media/umea-logo.svg" alt="Umea University">
+              </div>
+            </div>
+
+          </div>
+
+          <div>
+            <div class="video-frame">
+              <video src="media/forth-and-back.mp4" controls autoplay muted loop playsinline></video>
+              <div class="video-credit">
+                <a href="https://youtu.be/v6cUUEJ9Aaw">youtu.be/v6cUUEJ9Aaw</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <section data-title="Underactuated Robots">
+        <div class="cols" style="align-items: center;">
+          <div class="regular" style="margin-top: 2rem">
+            The robot dynamics are described by the Euler–Lagrange equations
+            $$
+              M\!\left(q\right)\ddot{q}+C\left(q,\dot{q}\right)\dot{q}+G\left(q\right) = F(q) u, 
+              \quad q \in \mathbb{R}^2,
+              \quad u \in \mathbb{R}
+            $$
+            where
+            <table class="table">
+              <tbody>
+                <tr>
+                  <td>$q$</td>
+                  <td>generalized coordinates</td>
+                </tr>
+                <tr>
+                  <td>$\dot q \equiv \frac{dq}{dt}$, $\ddot q \equiv \frac{d^2q}{dt^2}$</td>
+                  <td>generalized velocities and acceletations</td>
+                </tr>
+                <tr>
+                  <td>$u$</td>
+                  <td>control input</td>
+                </tr>
+                <tr>
+                  <td>$M(q) \in \mathbb{R}^{2\times 2}$</td>
+                  <td>positive definite symmetric matrix</td>
+                </tr>
+                <tr>
+                  <td>$C(q, \dot q) \in \mathbb{R}^{2\times 2}$</td>
+                  <td>a matrix function which is linear in $\dot q$</td>
+                </tr>
+                <tr>
+                  <td>$G(q) \in \mathbb{R}^2$</td>
+                  <td>contains potential forces</td>
+                </tr>
+                <tr>
+                  <td>$F(q) \in \mathbb{R}^{2}$</td>
+                  <td>is a nonzero vector field</td>
+                </tr>
+              </tbody>
+            </table>
+            The system admits a periodic solution
+            $$
+              q_\star(t + T) = q_\star(t), \quad u_\star(t + T) = u_\star(t), \quad T > 0.
+            $$
+          </div>
+          <div class="fragment fade-left">
+            <div class="box remark">
+              <title>Problem:</title>
+              Construct a state-feedback controller
+              $$u = u(q, \dot q),$$
+              such that the closed-loop system
+              $$
+                M\left(q\right)\ddot{q}+C\left(q,\dot{q}\right)\dot{q}+G\left(q\right) = F(q) \, u(q, \dot q)
+              $$
+              renders
+              $$
+                x_\star(t) = \bigl(q_\star(t),\dot q_\star(t)\bigr)
+              $$
+              a solution that is <b>asymptotically orbitally stable</b>.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section data-title="Transverse coordinates">
+        <div class="cols">
+          <div class="regular" style="flex: 1.1;">
+            <p>
+              A common approach to stabilizing $\mathrm{orb}\,x_\star$ is based on the <em>transverse linearization</em>.
+            </p>
+
+            We define new coordinates in a tubular vicinity of $\mathrm{orb} x_\star$:
+            <ol>
+              <li>
+                Introduce <b>transverse coordinates</b>
+                $$
+                  \xi = \beta \left(q,\dot{q}\right)\in\mathbb{R}^{3}
+                $$
+                and a <b>projection variable</b> identifies the <em>closest</em> point on the orbit
+                $$
+                  \theta = \pi \left(q,\dot{q}\right)\in\mathbb{R}/\mathbb{Z}
+                $$
+
+                Along the desired trajectory,
+                $$\begin{aligned}
+                  \beta\left(q_{\star}\left(t\right),\dot{q}_{\star}\left(t\right)\right)&=0, \\
+                  \frac{d}{dt}\pi\left(q_{\star}\left(t\right),\dot{q}_{\star}\left(t\right)\right)&>0\quad\forall t\in\mathbb{R}
+                \end{aligned}$$
+                
+                Locally, the transformation
+                $$
+                  (q,\dot q)\mapsto(\theta,\xi)
+                $$
+                is a diffeomorphism.
+              </li>
+            </ol>
+
+          </div>
+          <div class="regular" style="flex: 0.9">
+            <figure class="figure">
+              <img class="img" src="media/hyperplane-basis-vectors-3d.svg" alt="Hyperplane basis vectors 3d" style="width: 80%">
+                <figcaption class="caption">
+                  The transverse coordinates $\xi \in \mathbb{R}^3$ parameterize the section hypersurface
+                  $$S_\theta := \left\{x \in \mathbb{R}^4 \mid \pi(x) = \theta \right\}.$$
+                  The orbit corresponds to $\xi$, i.e.
+                  $$
+                    \xi = 0 \iff x \in \mathrm{orb}\,x_\star.
+                  $$
+                </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section data-title="Transverse Linearization Approach">
+        <div class="cols">
+          <div class="regular" style="border-right: 2px solid rgba(150,150,150,0.95);">
+            <ol>
+              <li value="2">
+                Introduce a control transformation
+                $$
+                  u=u(q,\dot q,w),
+                $$
+                such that the system takes the form
+                $$
+                  \ddot q=f(q,\dot q)+g(q)w,
+                $$
+                with the desired trajectory corresponding to
+                $$
+                  w = 0, \qquad
+                  \ddot q_\star(t) = f(q_\star(t), \dot q_\star(t)).
+                $$
+              </li>
+              <li>
+                Applying the coordinate and control transformations, and using $\theta$ as the independent variable,
+                $$
+                  \frac{d}{dt}=\left(\frac{\partial\pi}{\partial q}\dot{q}+\frac{\partial\pi}{\partial\dot{q}}f\left(q,\dot{q}\right)+\frac{\partial\pi}{\partial\dot{q}}g\left(q\right)w\right)\frac{d}{d\theta},
+                $$
+                the dynamics take the form
+                $$
+                  \frac{d\xi}{d\theta} = A(\theta)\xi+B(\theta)w+o(\xi,w),
+                $$
+                where $A(\theta)\in\mathbb{R}^{3\times3}$ and $B(\theta)\in\mathbb{R}^{3}$ are periodic.
+                <p>This is the <b>transverse linearization</b>.</p>
+              </li>
+            </ol>
+          </div>
+          <div class="regular">
+            <ol>
+              <div class="fragment fade-left">
+                <li value="4">
+                  Choose a feedback
+                  $$
+                    w=K(\theta)\xi,
+                    \qquad K(\theta)\in\mathbb{R}^{1\times(n-1)},
+                  $$
+                  such that the LTV system
+                  $$
+                    \frac{d\bar\xi}{d\theta}
+                    =
+                    \bigl(A(\theta)+B(\theta)K(\theta)\bigr)\bar\xi
+                  $$
+                  is exponentially stable.
+
+                  This yields the state feedback
+                  <div class="math-highlight">
+                  $$
+                    u=u\bigl(q,\dot q,K(\theta)\xi\bigr),
+                    \qquad
+                    \theta=\pi(q,\dot q),\quad
+                    \xi=\beta(q,\dot q),
+                  $$
+                  </div>
+                  which orbitally stabilizes $\mathrm{orb}\,x_\star$.
+                </li>
+              </div>
+              <div class="fragment fade-left">
+                <li>
+                  A standard approach for computing $K(\theta)$ is <b>linear-quadratic regulation (LQR)</b>, which requires solving a periodic matrix Riccati differential equation.
+                </li>
+              </div>
+            </ol>
+            <div class="fragment fade-left">
+              <div class="box remark">
+                <div class="title">
+                  Is there an alternative to LQR?
+                </div>
+                For any stabilizing feedback $w = K(\theta)\xi$, there exist weighting matrices making it an LQR solution.
+                <p>Can we construct a different class of stabilizing controllers?</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section data-title="Partial Feedback Linearization">
+        <div class="cols">
+          <div class="regular" style="border-right: 2px solid rgba(150,150,150,0.95);">
+            <p>The LTV system possesses special structure</p>
+            Let $h:\mathbb{R}^2\to\mathbb{R}$ satisfy
+            $$
+            h(q)=0,\qquad
+            dh(q)M^{-1}(q)F(q)\neq0
+            \quad
+            \forall q\in\mathrm{orb}\,x_\star.
+            $$
+
+            Define the transverse coordinates $\xi=\beta(x)$ by
+            $$
+            \xi_1=h(q),\qquad
+            \xi_2=L_{\dot q}h(q),\qquad
+            \xi_3=\beta_3(q,\dot q),
+            $$
+            where $d\beta_3$ is linearly independent of $dh$ and $dL_{\dot q}h$.
+
+            The control transformation $u\mapsto w$ is defined as
+            $$
+            \begin{aligned}
+            w={}&dh(q)M^{-1}(q)
+            \bigl(-C(q,\dot q)\dot q-G(q)+F(q)u\bigr)\\
+            &+L_{\dot q}^2h(q)+k_1h(q)+k_2L_{\dot q}h(q),
+            \end{aligned}
+            $$
+            where $k_1,k_2>0$.
+          </div>
+          <div class="regular">
+            The transverse linearization has the form
+            $$
+              \frac{d\bar{\xi}}{d\theta}=\underbrace{\left(\begin{array}{ccc}
+              0 & 1 & 0\\
+              -k_{1} & -k_{2} & 0\\
+              a_{1}\left(\theta\right) & a_{2}\left(\theta\right) & a_{3}\left(\theta\right)
+              \end{array}\right)}_{=:A\left(\theta\right)}\bar{\xi}+\underbrace{\left(\begin{array}{c}
+              0\\
+              1\\
+              b\left(\theta\right)
+              \end{array}\right)}_{=:B\left(\theta\right)}w.
+            $$
+            The functions $a_i(\theta)$ and $b(\theta)$ are periodic with the same period.
+
+            <div class="fragment fade-left">
+              <div class="box remark">
+                This special structure implies important properties of the LTV system.
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <section data-title="Transverse Linearization Properties">
+        <div class="cols">
+          <div style="flex: 1.5">
+            <div class="box remark">
+              <div class="title"> Proposition: </div>
+              For any $k_{1},k_{2}>0$, the unforced $T$-periodic LTV system 
+              \[
+                \small
+                \frac{d\bar{\xi}}{d\theta}=\underbrace{\left(\begin{array}{ccc}
+                  0 & 1 & 0\\
+                  -k_{1} & -k_{2} & 0\\
+                  a_{1}\left(\theta\right) & a_{2}\left(\theta\right) & a_{3}\left(\theta\right)
+                  \end{array}\right)}_{=:A\left(\theta\right)}\bar{\xi}
+              \]
+              possesses at least two stable Floquet multipliers $\left|\mu_{1,2}\right|<1$. 
+              <br>
+              Equivalently, let $X(\theta)$ be the solution of the matrix initial-value problem
+              \[
+                \small
+                \frac{dX}{d\theta} = A(\theta) X, \quad X(0) = I_{3\times 3}, \quad \theta \in [0, T].
+              \]
+              The monodromy matrix $\Psi \equiv X(T)$ has (at least) two eigenvalues satisfying $|\mu_{1,2}| < 1$.
+            </div>
+            <div class="fragment fade-left">
+              <div class="box remark">
+                <div class="title"> Corollary: </div>
+                For any $k_{1},k_{2}>0$, the unforced system possesses a two-dimensional invariant subspace
+                $$
+                  \mathcal{S}_{\theta} \equiv \mathrm{span}\{ e_{1}(\theta), e_{2}(\theta) \}.
+                $$
+                spanned solutions $\bar{\xi}=e_{1}\left(\theta\right)$
+                and $\bar{\xi}=e_{2}\left(\theta\right)$, associated with the stable Floquet multipliers $\mu_1, \mu_2$, provided $\mu_1 \ne \mu_2$. Consequently, any trajectory initialized in $\mathcal{S}_{\theta_{0}}$ remains in $S_{\theta}$ for
+                all $\theta\geq\theta_{0}$ and converges exponentially to the origin as $\theta\to\infty.$ 
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="box comment">
+              <div class="title"> Proof: </div>
+              The monodromy matrix has the lower block-triangular form
+              \[
+                \Psi=\left(\begin{array}{cc}
+                    \exp\left(\begin{array}{cc}
+                    0 & T\\
+                    -k_{1}T & -k_{2}T
+                    \end{array}\right) & \begin{array}{c}
+                    0\\
+                    0
+                    \end{array}\\
+                    \Psi_{31}\quad\quad\quad\Psi_{32} & \Psi_{33}
+                    \end{array}\right).
+              \]
+              The spectrum of a block-triangular matrix is the union of the spectra
+              of the diagonal blocks. Hence,
+              $$
+                \mu_{1,2}=\exp\left(\frac{-k_{2}\pm\sqrt{k_{2}^{2}-4k_{1}}}{2}T\right),\quad\mu_{3}=\Psi_{33}.
+              $$
+              Since $k_{1},k_{2}>0$ and $T>0$, it follows that $\left|\mu_{1,2}\right|<1$.
+            </div>
+            <div class="fragment fade-left">
+              <div class="box alert">
+                The system behavior inside $\mathcal{S}_\theta$ is stable. We must design a feedback law $w(\theta,\bar\xi)$ that drives every trajectory originating outside $\mathcal{S}_\theta$ into it in finite time.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section data-title="Theorem: Feedback Design for Partially Stabilized Periodic LTV System">
+        <div class="cols">
+          <div class="regular">
+            <p>
+              Consider the LTV system
+              \[
+                \frac{d\bar\xi}{d\theta} = A\left(\theta\right) \bar\xi + B\left(\theta\right) w
+              \]
+              where $\bar\xi \in \mathbb{R}^3$, $w \in \mathbb{R}$, and the continuous matrix functions 
+              $A(\theta) \in \mathbb{R}^{3\times3}$ and $B(\theta) \in \mathbb{R}^{3\times1}$ are $T$-periodic.
+              Assume that the unforced system
+              \[
+                \frac{d \bar\xi}{dt} = A\left(\theta\right) \bar\xi
+              \]
+              admits two solutions $\bar\xi = e_{1}\left(\theta\right)$, $\bar\xi = e_{2}\left(\theta\right)$,
+              satisfying $\lim_{\theta\to\infty}e_{i}\left(\theta\right)=0$, and that for all $\theta$
+              the vectors $e_{1}\left(\theta\right)$, $e_{2}\left(\theta\right)$ and $B\left(\theta\right)$ are linearly independent.
+              Define 
+              \[
+                z\equiv n^{\top}(\theta) \bar\xi \in\mathbb{R}, \quad \text{where} \quad
+                n(\theta)\equiv\frac{e_{1}\left(\theta\right)\times e_{2}\left(\theta\right)}{\left\Vert e_{1}\left(\theta\right)\times e_{2}\left(\theta\right)\right\Vert }\in\mathbb{R}^{3},
+              \]
+              where "$\times$" denotes the standard cross product in $\mathbb{R}^3$.
+              Then, for any $k_3>0$, the feedback control law
+              \[
+                w\left(\theta, \bar\xi\right) = -\frac{n^{\top}\left(\theta\right)A\left(\theta\right)n\left(\theta\right)z+k_3\mathrm{sign}\left(z\right)}{n^{\top}\left(\theta\right)B\left(\theta\right)},
+              \]
+              renders the origin of the closed-loop system globally asymptotically stable.
+            </p>
+          </div>
+          <div style="flex: 0.65; margin-top: 40pt;">
+            <figure class="figure">
+              <img src="media/invariant-subspace.svg"
+                   alt="Stable subspace"
+                   style="width:100%">
+              <figcaption class="caption">
+                Transient behavior schematically: trajectory comes to the stable subspace $\mathcal{S}_\theta$ in finute time, and after that converges expenentially to $\xi = 0$.
+              </figcaption>
+            </figure>
+
+            <div class="box comment">
+              <div class="title"> Comment: </div>
+              The feedback $w(\theta,\bar\xi)$ imposes the following dynamics for the sliding variable $z$:
+              $$
+                \frac{dz}{d\theta} = -k_3\,\mathrm{sign}(z).
+              $$
+            </div>
+          </div>
+        </div>
+
+        <div class="footnote" style="max-width: 60%; margin-top: -2pt;">
+          * The full proof in M. Surov, "Sliding-Mode-Based Control Design for the Butterfly Robot," IEEE TCST, DOI: 10.1109/TCST.2026.3654633.
+        </div>
+
+      </section>
+
+      <section data-title="Butterfly Robot Periodic Motion" data-background-gradient="radial-gradient(#000, #333)">
+        <div class="video-frame">
+          <video src="media/butterfly-sliding-control.mp4" controls autoplay muted loop playsinline class="video"></video>
+          <div class="video-credit">
+            <a href="https://youtu.be/v6cUUEJ9Aaw">youtu.be/v6cUUEJ9Aaw</a>
+          </div>
+        </div>
+      </section>
+
+      <section data-title="Remark: Assumption of Linear Independence">
+        <div class="cols">
+
+          <div style="flex: 0.8">
+            <div class="box remark">
+              <div class="title" style="font-size: 26pt">Remark:</div>
+              For the LTV system 
+              \[
+                \frac{d\bar\xi}{d\theta} = A\left(\theta\right) \bar\xi + B\left(\theta\right) w
+              \]
+              we have made the assumption:
+              \[
+                n^\top(\theta) B(\theta) \ne 0
+              \]
+              (or, equivalently, on linear independence of the vectors $e_1(\theta),$ $e_2(\theta)$ and $B(\theta)$ for all $\theta$).
+              <br>
+              If the requirement fails, then the desired dynamics
+              $$
+                \frac{dz}{d\theta} = -k_3 \,\mathrm{sign}(z)
+              $$
+              cannot be achieved. This issue was considered in [1].
+            </div>
+            <div class="footnote" style="max-width: 95%">
+              [1] L. Ovalle, L. Fridman, "Sliding mode control for systems with zero-crossing control gain under matched and mismatched disturbances," Automatica, vol. 159, 2024.
+            </div>
+          </div>
+          <div>
+            <div class="box theorem">
+              <div class="title">Feedback modification:</div>
+              If $n^{\top}\!\left(\theta_z\right)B\left(\theta_z\right) = 0$ at finitely many isolated points $\theta_z \in [0, T]$, we can change the feedback
+              $$
+                w\left(\theta,\xi\right)=-\boxed{\frac{n^{\top}\left(\theta\right)A\left(\theta\right)n\left(\theta\right)}{n^{\top}\left(\theta\right)B\left(\theta\right)}} \, z-
+                \boxed{\frac{k_{3}}{n^{\top}\left(\theta\right)B\left(\theta\right)}}\,\mathrm{sign}\left(z\right)
+              $$
+              with
+              $$
+                w\left(\theta,\xi\right)=-\boxed{k_{4}\,\sigma\left(n^{\top}\left(\theta\right)B\left(\theta\right)\right)} \, z
+                -\boxed{k_{3}\,\sigma\left(n^{\top}\left(\theta\right)B\left(\theta\right)\right)} \, \mathrm{sign}\left(z\right)
+              $$
+              where $\sigma$ is a sigmoid-like function, e.g., 
+              $$
+                \sigma(x) = x / (|x| + \varepsilon) \quad \text{for} \quad x \in \mathbb{R}.
+              $$
+              The proposed control induces the dynamics of the sliding variable
+              <div class="math-annotated">
+                <span>
+                  $$\frac{dz}{d\theta}=$$
+                </span>
+                <span class="term">
+                  <span class="math"> $$ \left(n^{\top}A\,n-k_{4} \, n^{\top}B\,\sigma\left(n^{\top}B\right)\right) $$ </span>
+                  <span class="label"> periodic function of $\theta$ </span>
+                </span>
+                <span class="math"> $$ z - $$ </span>
+                <span class="term">
+                  <span class="math"> $$ \quad k_{3} \, n^{\top}B\,\sigma\left(n^{\top}B\right) \quad $$ </span>
+                  <span class="label" style="bottom: -1.6em;"> non-negative periodic function of $\theta$ </span>
+                </span>
+                <span class="math"> $$ \mathrm{sign}\left(z\right) $$ </span>
+              </div>
+              <br>
+              and convergence over a period can be achieved by selecting sufficiently large $k_3, k_4.$
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section data-title="Butterfly Robot Periodic Motion" data-background-gradient="radial-gradient(#000, #333)">
+        <div class="video-frame">
+          <video src="media/forth-and-back.mp4" controls autoplay muted loop playsinline class="video"></video>
+          <div class="video-credit">
+            <a href="https://youtu.be/hx9mxDxHBB0">youtu.be/hx9mxDxHBB0</a>
+          </div>
+        </div>
+      </section>
+
+      <section data-title="Appliction: Synchronization of Orbitally Stabilized Robots">
+        <div class="cols regular">
+          <div style="border-right: 2px solid rgba(150, 150, 150, 0.50);">
+            <ol>
+              <li>From 
+                $$\theta = \pi(q, \dot q) \quad \text{and} \quad \ddot q = f(q, \dot q) + g(q) w$$
+                we obtain
+                \[
+                  \frac{dt}{d\theta}=\frac{1}{\partial_{q}\pi\left(q,\dot{q}\right)\dot{q}+\partial_{\dot{q}}\pi\left(q,\dot{q}\right)f\left(q,\dot{q}\right)+\partial_{\dot{q}}\pi\left(q,\dot{q}\right)g\left(q\right)w}
+                \]
+                <div class="box remark">
+                  Physical time becomes a dynamic variable in $(\theta,\xi)$ coordinates.
+                </div>
+                Define the <b>lateness</b> variable
+                $$
+                  \delta := t - \theta^{-1}_{\star}\left(\theta\right), \quad \theta_{\star}\left(t\right) := \pi\left(q_{\star}\left(t\right),\dot{q}_{\star}\left(t\right)\right).
+                $$
+              </li>
+              <li>
+                The extended transverse dynamics have the linearization
+                $$\begin{aligned}
+                  \frac{d\xi}{d\theta} &= A(\theta)\xi + B(\theta) w \\
+                  \frac{d\delta}{d\theta} &= A_{\delta}(\theta)\xi + B_{\delta}(\theta) w
+                \end{aligned}$$
+                <div class="box remark">
+                  The lateness dynamics do not depend on $\delta$.
+                </div>
+              </li>
+            </ol>
+          </div>
+          <div style="flex: 1.2; margin-left: 10pt;">
+            <ol>
+              <li value="3">
+                For the LTV system, we design the feedback
+                <div class="math-annotated">
+                  <span>
+                    $$ w\left(\theta,\xi,\delta\right)= $$
+                  </span>
+                  <span class="term">
+                    <span class="math"> $$ K(\theta) \xi \quad $$ </span>
+                    <span class="label" style="bottom: -1.6em"> stabilization term </span>
+                  </span>
+                  <span>
+                    <span class="math"> $-$ </span>
+                  </span>
+                  <span class="term">
+                    <span class="math"> $$ \frac{k_{s} \, \mathrm{sign}\left(n^{\top}\left(\theta\right)\xi+\delta\right) }{n^{\top}\!\left(\theta\right)B\left(\theta\right)+B_{\delta}\left(\theta\right)} $$</span>
+                    <span class="label"> time synchronization term</span>
+                  </span>
+                </div>
+                <br>
+                where $k_s > 0$ and $n(\theta)$ is the periodic solution of
+                $$
+                  \frac{dn}{d\theta}=-\left(A\left(\theta\right)+B\left(\theta\right)K\left(\theta\right)\right)^{\top}n  -\left(A_{\delta}\left(\theta\right)+B_{\delta}\left(\theta\right)K\left(\theta\right)\right)^{\top}.
+                $$
+                
+                For $k_s=0$, the controller reduces to standard orbital stabilization.
+                Thus, $k_s$ provides a tunable trade-off between orbit tracking
+                and synchronization.
+              </li>
+              <li>
+                The proposed feedback provides both <b>asymptotic orbital stability</b>
+                and
+                $$
+                  \delta\to0.
+                $$
+                Consequently,
+                $$
+                  x(t) - x_\star(t) \to 0,
+                $$
+                i.e., the desired trajectory is <b>asymptotically stable</b><sup>*</sup>.
+              </li>
+            </ol>
+            <div class="footnote" style="max-width: 90%; margin-top: 20pt;">
+              * M. Surov et. al., Orbital Stabilization and Time Synchronization of Unstable Periodic Motions in Underactuated Robots, ICRA 2026
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section data-title="Experiment: Butterfly Robot Time Synchronization">
+        <div class="cols">
+          <div style="width: 60%; margin: 0.6rem auto 0.6rem;">
+            <div class="regular">
+              The synchronization algorithm was verified in experiments<sup>*</sup>. The period of the trajectory is $T=4.77$ sec. The initial desynchronization is about $15$ sec.
+            </div>
+            <figure class="figure" style="flex: 0.6">
+              <img src="media/phase_coords_transient.svg"
+                   alt="phase coords convernece"
+                   style="width:100%">
+              <figcaption class="caption">
+                Asymptotic stability of the $x_\star(t)$ trajectory. Components of the phase variable $x \equiv (\vartheta, \varphi, \dot\vartheta, \dot\varphi)$ converge asymptotically to the reference signal.
+              </figcaption>
+            </figure>
+
+            <div class="footnote" style="max-width: 90%; margin-top: 50pt;">
+              * M. Surov et. al., Orbital Stabilization and Time Synchronization of Unstable Periodic Motions in Underactuated Robots, ICRA 2026
+            </div>
+
+          </div>
+          <div>
+            <figure class="figure" style="flex: 0.6">
+              <img src="media/synchronization.svg"
+                   alt="synchronizaton"
+                   style="width:100%">
+            </figure>
+          </div>
+        </div>
+
+      </section>
+
+      <section data-title="Decentralized Synchronization of Six Robots" data-background-gradient="radial-gradient(#000, #333)">
+        <div class="video-frame">
+          <video src="media/sync-butterfly-presentation.mp4" controls autoplay muted loop playsinline class="video"></video>
+          <div class="video-credit">
+            <a href="https://youtu.be/hx9mxDxHBB0">youtu.be/hx9mxDxHBB0</a>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+  <div class="page-number-badge" id="page-number">1 / 1</div>
+
+  <script src="reveal/plugin/math/math.js"></script>
+  <script src="reveal/dist/reveal.js"></script>
+
+  <script>
+
+    const deck = new Reveal({
+      width: 1920,
+      height: 1080,
+      controls: true,
+      progress: true,
+      center: true,
+      hash: true,
+      slideNumber: false, // we'll show a custom page number badge
+      transition: 'convex',
+      transitionSpeed: 'default', // slow, fast
+      dependencies: [
+        // add plugins here if needed
+      ],
+      plugins: [ RevealMath.KaTeX ],
+      // plugins: [ RevealMath.MathJax3 ],
+      math: {
+        delimiters: [
+          {left: "$$", right: "$$", display: true},
+          {left: "\\[", right: "\\]", display: true},
+          {left: "$", right: "$", display: false},
+          {left: "\\(", right: "\\)", display: false}
+        ]
+      }
+    });
+    deck.initialize();
+
+    function countSections() {
+      // count top-level sections only (not vertical stacks), emulate visible slides count
+      const secs = Array.from(document.querySelectorAll('.reveal .slides > section'));
+      // include vertically nested sections: flatten
+      let count = 0;
+      secs.forEach(s => {
+        const children = s.querySelectorAll('section');
+        if (children.length) {
+          count += children.length;
+        } else {
+          count +=1;
+        }
+      });
+      return count;
+    }
+
+    // Helper to update page number and subtitle
+    function updateStatus() {
+      const indices = deck.getIndices();
+      const total = countSections();
+
+      // Compute linear index (1-based): horizontal index plus vertical offset
+      // Reveal offers getTotalSlides() but not in all builds; compute manually
+      const horizontal = indices.h || 0;
+      const vertical = indices.v || 0;
+
+      // Create a simple mapping: iterate all top-level sections and accumulate
+      const tops = Array.from(document.querySelectorAll('.reveal .slides > section'));
+      let linearIndex = 0;
+
+      for(let i=0; i < tops.length; i++){
+        const nested = tops[i].querySelectorAll('section');
+        if(nested.length){
+          if(i < horizontal) linearIndex += nested.length;
+          else if(i === horizontal) linearIndex += (vertical + 1);
+        } else {
+          if(i < horizontal) linearIndex += 1;
+          else if(i === horizontal) linearIndex += 1;
+        }
+      }
+
+      if (linearIndex === 0) linearIndex = 1; // fallback
+
+      // Update DOM
+      const badge = document.getElementById('page-number');
+      badge.textContent = linearIndex + ' / ' + total;
+
+      // Update slide subtitle from the slide's h2 or data-title
+      const current = deck.getCurrentSlide();
+      let label = '';
+      if(current) {
+        const h2 = current.querySelector('h2');
+        if(current.dataset && current.dataset.title) {
+          label = current.dataset.title;
+        } else if (h2) {
+          label = h2.textContent.trim();
+        }
+      }
+
+      if (label) {
+        document.getElementById('slide-subtitle').textContent = label;
+        document.getElementById('slide-title').style.display = "flex";
+      } else {
+        document.getElementById('slide-subtitle').textContent = '';
+        document.getElementById('slide-title').style.display = "none";
+      }
+    }
+
+    deck.on('ready', updateStatus);
+    deck.on('slidechanged', updateStatus);
+    deck.on('fragmentshown', updateStatus);
+  </script>
+</body>
+</html>

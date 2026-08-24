@@ -1,0 +1,671 @@
+#LyX 2.5 created this file. For more info see https://www.lyx.org/
+\lyxformat 643
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children no
+\language american
+\language_package default
+\inputencoding utf8
+\fontencoding auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification default
+\crossref_package refstyle
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\backgroundcolor none
+\fontcolor none
+\notefontcolor lightgray
+\boxbgcolor red
+\table_border_color default
+\table_odd_row_color default
+\table_even_row_color default
+\table_alt_row_colors_start 1
+\index Index
+\shortcut idx
+\color #008080
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content true
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\docbook_mathml_version 0
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula $y=\phi\left(q\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula $\dot{y}=L_{\dot{q}}\phi$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula $\ddot{y}=\frac{\partial\phi}{\partial q}\ddot{q}+L^{2}_{\dot{q}}\phi$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula $\ddot{q}=M^{-1}\left(-C\dot{q}-G+Fu\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula $\ddot{y}=-\frac{\partial\phi}{\partial q}M^{-1}C\dot{q}-\frac{\partial\phi}{\partial q}M^{-1}G+\frac{\partial\phi}{\partial q}M^{-1}Fu+L^{2}_{\dot{q}}\phi$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+let 
+\begin_inset Formula $-\frac{\partial\phi}{\partial q}M^{-1}C\dot{q}-\frac{\partial\phi}{\partial q}M^{-1}G+\frac{\partial\phi}{\partial q}M^{-1}Fu+L^{2}_{\dot{q}}\phi=-k_{1}y-k_{2}\dot{y}+w$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+then
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula $\ddot{y}=-k_{1}y-k_{2}\dot{y}+w$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+—
+
+\end_layout
+
+\begin_layout Plain Layout
+We have Euler-Lagrange system and periodic trajectory 
+\begin_inset Formula $q_{\star}\left(t\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+We define transverse coordinates 
+\begin_inset Formula $y=h\left(q\right)$
+\end_inset
+
+,
+ such that 
+\begin_inset Formula $h\left(q_{\star}\left(t\right)\right)=0$
+\end_inset
+
+.
+ Then
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula $\ddot{y}=-\frac{\partial\phi}{\partial q}M^{-1}C\dot{q}-\frac{\partial\phi}{\partial q}M^{-1}G+\frac{\partial\phi}{\partial q}M^{-1}Fu+L^{2}_{\dot{q}}\phi$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+Under mild assumptions,
+ we can introduce new control variable
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula $w:=-\frac{\partial\phi}{\partial q}M^{-1}C\dot{q}-\frac{\partial\phi}{\partial q}M^{-1}G+\left[\frac{\partial\phi}{\partial q}M^{-1}F\right]u+L^{2}_{\dot{q}}\phi+k_{1}y+k_{2}\dot{y}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+Then,
+ there exists positive definite symmetric matrix 
+\begin_inset Formula $P$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+V\left(y,\dot{y}\right)=\frac{1}{2}\left(\begin{array}{c}
+y\\
+\dot{y}
+\end{array}\right)^{\top}P\left(\begin{array}{c}
+y\\
+\dot{y}
+\end{array}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+such that 
+\begin_inset Formula 
+\[
+\frac{d}{dt}V\left(y,\dot{y}\right)\leq-\alpha V\left(y,\dot{y}\right).
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+—
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We consider dynamical system given by the Euler-Lagrange equations
+\begin_inset Formula 
+\[
+M\left(q\right)\ddot{q}+C\left(q,\dot{q}\right)\dot{q}+G\left(q\right)=F\left(q\right)u.
+\]
+
+\end_inset
+
+The system admits a periodic solution 
+\begin_inset Formula $q_{\star}\left(t\right),u_{\star}\left(t\right)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+A common approach for stabilizing 
+\begin_inset Formula $\mathrm{orb}\,x_{\star}$
+\end_inset
+
+ is based on the transverse linearization:
+ we introduce cootdinates 
+\begin_inset Formula $\xi=\xi\left(q,\dot{q}\right)\in\mathbb{R}^{3}$
+\end_inset
+
+ and the projection variable 
+\begin_inset Formula $\theta=\theta\left(q,\dot{q}\right)\in\mathbb{R}/\!\sim$
+\end_inset
+
+ which satisfy 
+\begin_inset Formula 
+\begin{align*}
+\xi\left(q_{\star}\left(t\right),\dot{q}_{\star}\left(t\right)\right) & =0,\\
+\frac{d}{dt}\theta\left(q_{\star}\left(t\right),\dot{q}_{\star}\left(t\right)\right) & >0\quad\forall t\in\mathbb{R}
+\end{align*}
+
+\end_inset
+
+the transformation 
+\begin_inset Formula $\left(q,\dot{q}\right)\mapsto\left(\theta,\xi\right)$
+\end_inset
+
+ is diffeomorphism 
+\begin_inset Formula $U\left(x_{\star}\right)\to\left(\mathbb{R}/\!\sim\right)\times B_{\varepsilon}\left(0\right)$
+\end_inset
+
+.
+ Introduce the control signal transformation 
+\begin_inset Formula $u\mapsto w$
+\end_inset
+
+ as
+\begin_inset Formula 
+\[
+u=u\left(q,\dot{q},w\right).
+\]
+
+\end_inset
+
+such that for 
+\begin_inset Formula $w=0$
+\end_inset
+
+,
+ the equality holds
+\begin_inset Formula 
+\[
+M\left(\dot{q}_{\star}\left(t\right)\right)\ddot{q}_{\star}\left(t\right)+C\left(q_{\star}\left(t\right),\dot{q}_{\star}\left(t\right)\right)\dot{q}_{\star}\left(t\right)+G\left(q_{\star}\left(t\right)\right)=F\left(q_{\star}\left(t\right)\right)u\left(q_{\star}\left(t\right),\dot{q}_{\star}\left(t\right),0\right)
+\]
+
+\end_inset
+
+Then,
+ outline dynamics in coordinates 
+\begin_inset Formula $\theta,\xi$
+\end_inset
+
+ as 
+\begin_inset Formula 
+\begin{align*}
+\frac{d\xi}{d\theta} & =A\left(\theta\right)\xi+B\left(\theta\right)w+o\left(\xi,w\right)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $h:\mathbb{R}^{2}\to\mathbb{R}$
+\end_inset
+
+ be a function such that 
+\begin_inset Formula 
+\[
+h\left(q_{\star}\left(t\right)\right)=0\quad\forall t\in\mathbb{R}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\mathrm{rank}\,dh\left(q_{\star}\left(t\right)\right)=n-1\quad\forall t\in\mathbb{R}
+\]
+
+\end_inset
+
+and the function
+\begin_inset Formula 
+\[
+N\left(q\right):=dh\left(q\right)M^{-1}\left(q\right)F\left(q\right)\in\mathbb{R}\quad\text{(this requirement can be relaxed)}
+\]
+
+\end_inset
+
+does not vanish along 
+\begin_inset Formula $q_{\star}\left(t\right)$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Then,
+ we can introduce the new control variable 
+\begin_inset Formula 
+\begin{align*}
+w & :=dh\left(q\right)M^{-1}\!\left(q\right)\left(-C\left(q,\dot{q}\right)\dot{q}-G\left(q\right)+F\left(q\right)u\right)+L^{2}_{\dot{q}}h\left(q\right)+\nu_{1}h\left(q\right)+\nu_{2}L_{\dot{q}}h\left(q\right),
+\end{align*}
+
+\end_inset
+
+where 
+\begin_inset Formula $\nu_{1},\nu_{2}>0$
+\end_inset
+
+.
+ For 
+\begin_inset Formula $w=0$
+\end_inset
+
+ the closed loop system is 
+\begin_inset Quotes eld
+\end_inset
+
+partially stable
+\begin_inset Quotes erd
+\end_inset
+
+,
+ i.e.
+ there exists a positive definite matrix 
+\begin_inset Formula $P$
+\end_inset
+
+,
+ such that 
+\begin_inset Formula 
+\[
+V:=\frac{1}{2}y^{\top}Py
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{d}{dt}V\left(q,\dot{q}\right)\leq-V\left(q,\dot{q}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Introduce transverse coordinates
+\begin_inset Formula 
+\begin{align*}
+\xi & =\xi\left(x\right)\in\mathbb{R}^{3}\\
+\theta & =\theta\left(x\right)\in S^{1}
+\end{align*}
+
+\end_inset
+
+Outline dynamics in new coordinates
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\ddot{q}=M^{-1}\left(-C\dot{q}-G+Fu\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $y=h\left(q\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\dot{y}=L_{\dot{q}}h$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\ddot{y}=L^{2}_{\dot{q}}h+dh\ddot{q}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\ddot{y}=L^{2}_{\dot{q}}h\left(q\right)+dh\left(q\right)M^{-1}\left(q\right)\left(-C\left(q,\dot{q}\right)\dot{q}-G\left(q\right)+F\left(q\right)u\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\ddot{y}=L^{2}_{\dot{q}}h\left(q\right)+dh\left(q\right)M^{-1}\left(q\right)\left(-C\left(q,\dot{q}\right)\dot{q}-G\left(q\right)+F\left(q\right)u\right)=-k_{1}h-k_{2}L_{\dot{q}}h+w$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $w:=L^{2}_{\dot{q}}h\left(q\right)+dh\left(q\right)M^{-1}\!\left(q\right)\left(-C\left(q,\dot{q}\right)\dot{q}-G\left(q\right)+F\left(q\right)u\right)+k_{1}h+k_{2}L_{\dot{q}}h$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
