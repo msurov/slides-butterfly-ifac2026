@@ -1,3 +1,3 @@
 Presentation is available at
 
-https://msurov.github.io/slides-butterfly-sliding-control-reveal
+https://msurov.github.io/slides-butterfly-ifac2026/
