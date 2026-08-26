@@ -46,7 +46,7 @@
         <div class="arm right"></div>
       </div>
       <div>
-        <div class="title-foot">Orbital Stabilization of Periodic Orbits</div>
+        <div class="title-foot">Stabilization of Periodic Orbits</div>
         <div class="author-foot">
           Maksim Surov
         </div>
@@ -124,9 +124,12 @@
           <div class="regular" style="margin-top: 2rem">
             The robot dynamics are described by the Euler–Lagrange equations
             $$
-              M\!\left(q\right)\ddot{q}+C\left(q,\dot{q}\right)\dot{q}+G\left(q\right) = F(q) u, 
+              M\!\left(q\right)\ddot{q}+C\left(q,\dot{q}\right)\dot{q}+G\left(q\right) = F(q) u,
+            $$
+            $$
               \quad q \in \mathbb{R}^2,
-              \quad u \in \mathbb{R}
+              \quad u \in \mathbb{R},
+              \quad x \equiv (q, \dot q) \in \mathbb{R}^4,
             $$
             where
             <table class="table">
@@ -371,11 +374,11 @@
         </div>
       </section>
 
-      <section data-title="Transverse Linearization Properties">
+      <section data-title="Stable Floquet Solutions">
         <div class="cols">
           <div style="flex: 1.5">
-            <div class="box remark">
-              <div class="title"> Proposition: </div>
+            <div class="box theorem" style="margin-right: 0pt;">
+              <div class="title">Proposition: </div>
               For any $k_{1},k_{2}>0$, the unforced $T$-periodic LTV system 
               \[
                 \small
@@ -395,7 +398,7 @@
               The monodromy matrix $\Psi \equiv X(T)$ has (at least) two eigenvalues satisfying $|\mu_{1,2}| < 1$.
             </div>
             <div class="fragment fade-left">
-              <div class="box remark">
+              <div class="box remark" style="margin-right: 0pt;">
                 <div class="title"> Corollary: </div>
                 For any $k_{1},k_{2}>0$, the unforced system possesses a two-dimensional invariant subspace
                 $$
@@ -431,7 +434,8 @@
               Since $k_{1},k_{2}>0$ and $T>0$, it follows that $\left|\mu_{1,2}\right|<1$.
             </div>
             <div class="fragment fade-left">
-              <div class="box alert">
+              <div class="box remark">
+                <div class="title">Algorithm:</div>
                 The system behavior inside $\mathcal{S}_\theta$ is stable. We must design a feedback law $w(\theta,\bar\xi)$ that drives every trajectory originating outside $\mathcal{S}_\theta$ into it in finite time.
               </div>
             </div>
@@ -458,13 +462,13 @@
               the vectors $e_{1}\left(\theta\right)$, $e_{2}\left(\theta\right)$ and $B\left(\theta\right)$ are linearly independent.
               Define 
               \[
-                z\equiv n^{\top}(\theta) \bar\xi \in\mathbb{R}, \quad \text{where} \quad
+                z\equiv n^{\top}\!(\theta) \, \bar\xi \in\mathbb{R}, \quad \text{where} \quad
                 n(\theta)\equiv\frac{e_{1}\left(\theta\right)\times e_{2}\left(\theta\right)}{\left\Vert e_{1}\left(\theta\right)\times e_{2}\left(\theta\right)\right\Vert }\in\mathbb{R}^{3},
               \]
               where "$\times$" denotes the standard cross product in $\mathbb{R}^3$.
               Then, for any $k_3>0$, the feedback control law
               \[
-                w\left(\theta, \bar\xi\right) = -\frac{n^{\top}\left(\theta\right)A\left(\theta\right)n\left(\theta\right)z+k_3\mathrm{sign}\left(z\right)}{n^{\top}\left(\theta\right)B\left(\theta\right)},
+                w\left(\theta, \bar\xi\right) = -\frac{n^{\top} \! \left(\theta\right)A\left(\theta\right)n\left(\theta\right)z+k_3\mathrm{sign}\left(z\right)}{n^{\top} \! \left(\theta\right)B\left(\theta\right)},
               \]
               renders the origin of the closed-loop system globally asymptotically stable.
             </p>
@@ -579,6 +583,44 @@
         </div>
       </section>
 
+      <section data-title="Concluding Remarks">
+
+        <div class="box question" style="max-width: 50%">
+          <div style="font-size: 30pt; margin-top: 40pt; margin-left: 10pt; margin-right: 10pt; font-weight: 800; color: #4040A0;"> ? </div>
+          <div>
+            Does stability of the LTV system imply stability of the nonlinear system?
+            Not necessarily: with discontinuous feedback, the nonlinear system
+            may not possess the invariant subspace $\mathcal{S}_\theta$.
+            <p>Additional analysis based on Lyapunov functions is required.</p>
+          </div>
+        </div>
+        <div class="box disadvantage fragment fade-left" style="max-width: 50%">
+          <div style="font-size: 30pt; margin-top: 6pt; margin-left: 10pt; margin-right: 10pt; font-weight: 800; color: #4040A0;"> – </div>
+          <div>
+            There is little difference in tracking quality between LQR-based and sliding-mode-based
+            orbital stabilization.
+          </div>
+        </div>
+        <div class="box advantage fragment fade-left" style="max-width: 50%">
+          <div style="font-size: 30pt; margin-top: 6pt; margin-left: 10pt; margin-right: 10pt; font-weight: 800; color: #4040A0;"> + </div>
+          <div>
+            The proposed approach avoids solving the computationally demanding
+            periodic Riccati equation.
+          </div>
+        </div>
+        <div class="box advantage fragment fade-left" style="max-width: 50%">
+          <div style="font-size: 30pt; margin-top: 6pt; margin-left: 10pt; margin-right: 10pt; font-weight: 800; color: #4040A0;"> + </div>
+          <div>
+            The method can be readily extended to Euler–Lagrange systems with $n$ DOFs and $n-1$ control inputs.
+          </div>
+        </div>
+        <div class="box advantage fragment fade-left" style="max-width: 50%">
+          <div style="font-size: 30pt; margin-top: 1pt; margin-left: 10pt; margin-right: 10pt; font-weight: 800; color: #4040A0;"> + </div>
+          The sliding-mode approach can extend the region of attraction...
+        </div>
+
+      </section>
+
       <section data-title="Appliction: Synchronization of Orbitally Stabilized Robots">
         <div class="cols regular">
           <div style="border-right: 2px solid rgba(150, 150, 150, 0.50);">
@@ -590,7 +632,7 @@
                   \frac{dt}{d\theta}=\frac{1}{\partial_{q}\pi\left(q,\dot{q}\right)\dot{q}+\partial_{\dot{q}}\pi\left(q,\dot{q}\right)f\left(q,\dot{q}\right)+\partial_{\dot{q}}\pi\left(q,\dot{q}\right)g\left(q\right)w}
                 \]
                 <div class="box remark">
-                  Physical time becomes a dynamic variable in $(\theta,\xi)$ coordinates.
+                  Physical time becomes a dynamic variable in $(\theta,\xi)$ coordinates: it is an integral along a solution $\xi(\theta), w(\theta)$ of the transverse dynamics.
                 </div>
                 Define the <b>lateness</b> variable
                 $$
